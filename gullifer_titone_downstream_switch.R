@@ -1,3 +1,7 @@
+# Script corresponding to 
+# Gullifer, J. W., & Titone, D. (submitted). The impact of a momentary language 
+# switch on bilingual reading. Journal of Experimental Psychology: Learning, Memory, and Cognition.
+
 library(checkpoint)
 checkpoint("2017-04-16")
 
@@ -13,22 +17,24 @@ library(papaja)
 
 # Load data ----------------------
 # alldata used for analyses at switch region
-alldata       <- read.csv("data/alldata.csv")
+alldata       <- read.csv("data/alldata.csv", encoding = "UTF-8")
 
-# cognatedata used for cognate analyses
-cognatedata   <- read.csv("data/cognatedata.csv")
+# cognatedata used for analyses at the target region corresponding to the
+# cognate effect
+cognatedata   <- read.csv("data/cognatedata.csv", encoding = "UTF-8")
 
-# homographdata used for homograph analyses
-homographdata <- read.csv("data/homographdata.csv")
+# homographdata for analyses at the target region corresponding to the
+# homograph effect
+homographdata <- read.csv("data/homographdata.csv", encoding = "UTF-8")
 
-# contrasts for the switching effects
-contrasts(alldata$switch_noswitch)        <- -1 * contr.sum(2)/2
-contrasts(homographdata$switch_noswitch)  <- -1 * contr.sum(2)/2
-contrasts(cognatedata$switch_noswitch)    <- -1 * contr.sum(2)/2
+# contrast coding for the switching effects
+contrasts(alldata$switch_noswitch)        <- -1 * contr.sum(2) / 2
+contrasts(homographdata$switch_noswitch)  <- -1 * contr.sum(2) / 2 
+contrasts(cognatedata$switch_noswitch)    <- -1 * contr.sum(2) / 2
 
 # contrasts for the word type effects
-contrasts(homographdata$WordType)  <- -1 * contr.sum(2)/2
-contrasts(cognatedata$WordType)    <- -1 * contr.sum(2)/2
+contrasts(homographdata$WordType)  <- -1 * contr.sum(2) / 2
+contrasts(cognatedata$WordType)    <- -1 * contr.sum(2) / 2
 
 # Datasets for French L1 bilinguals
 alldata.f       <- alldata[alldata$L1 == "French",]
@@ -36,15 +42,15 @@ cognatedata.f   <- cognatedata[cognatedata$L1 == "French",]
 homographdata.f <- homographdata[homographdata$L1 == "French",]
 
 # Datasets for English L1 bilinguals
-alldata.e       <-alldata[alldata$L1 == "English",]
-cognatedata.e   <-cognatedata[cognatedata$L1 == "English",]
-homographdata.e <-homographdata[homographdata$L1 =="English",]
+alldata.e       <- alldata[alldata$L1 == "English",]
+cognatedata.e   <- cognatedata[cognatedata$L1 == "English",]
+homographdata.e <- homographdata[homographdata$L1 =="English",]
 
 # Aggregate data for subject-level plots ----------------------
 # GD, switch region
 switch.sum.gd.subj <- alldata %>%
   group_by(subject, L1, switch_noswitch) %>%
-  summarize(GD = mean(FPGD_switch, na.rm=T)
+  summarize(GD = mean(FPGD_switch, na.rm = T)
   )
 
 switch.sum.gd.avg <- switch.sum.gd.subj %>%
@@ -58,14 +64,14 @@ switch.sum.gd.avg <- switch.sum.gd.subj %>%
 # TRT, switch region
 switch.sum.trt.subj <- alldata %>%
   group_by(subject, L1, switch_noswitch) %>%
-  summarize(TRT = mean(TRT_switch, na.rm=T)
+  summarize(TRT = mean(TRT_switch, na.rm = T)
   )   
 
 switch.sum.trt.avg <- switch.sum.trt.subj %>%
   group_by(L1, switch_noswitch) %>%
   summarize(N = n(),
             meanRT = mean(TRT),                   
-            sd =sd(TRT),           
+            sd = sd(TRT),           
             serr = sd(TRT) / sqrt(N))%>%
   mutate(measure = "TRT", switch_target = "switch")
 
@@ -75,7 +81,7 @@ switch.sum.avg <- bind_rows(switch.sum.gd.avg, switch.sum.trt.avg)
 # GD, target cognate stimuli
 cogs.target.sum.gd.subj <- cognatedata %>%
   group_by(subject, L1, switch_noswitch, WordType) %>%
-  summarize(GD = mean(FPGD_target, na.rm=T)
+  summarize(GD = mean(FPGD_target, na.rm = T)
   )
 
 cogs.target.sum.gd.avg <- cogs.target.sum.gd.subj %>%
@@ -103,10 +109,10 @@ cogs.target.sum.trt.avg <- cogs.target.sum.trt.subj %>%
 # Combine the GD and TRT, target cognate stimuli
 cogs.target.sum.avg <- bind_rows(cogs.target.sum.gd.avg, cogs.target.sum.trt.avg)
 
-# GD, targer homograph stimuli
+# GD, target homograph stimuli
 homs.target.sum.gd.subj <- homographdata %>%
   group_by(subject, L1, switch_noswitch, WordType) %>%
-  summarize(GD = mean(FPGD_target, na.rm=T)
+  summarize(GD = mean(FPGD_target, na.rm = T)
   )
 
 homs.target.sum.gd.avg <- homs.target.sum.gd.subj %>%
@@ -134,28 +140,28 @@ homs.target.sum.trt.avg <- homs.target.sum.trt.subj %>%
 # Combine the GD and TRT, target homograph stimuli
 homs.target.sum.avg <- bind_rows(homs.target.sum.gd.avg, homs.target.sum.trt.avg)
 
-# Combine all data together for plotting
+# Combine the aggregate together for plotting
 all.target.sum.avg <- bind_rows(cogs.target.sum.avg, homs.target.sum.avg)
-all.target.sum.avg$targ_cont <- ifelse(all.target.sum.avg$WordType=="Cognate" | 
-                                         all.target.sum.avg$WordType=="Homograph", "Target", "Control")
-switch.sum.avg$WordType = NA
-switch.sum.avg$dataset = "Switch"
+all.target.sum.avg$targ_cont <- ifelse(all.target.sum.avg$WordType == "Cognate" | 
+                                         all.target.sum.avg$WordType == "Homograph", "Target", "Control")
+switch.sum.avg$WordType  = NA
+switch.sum.avg$dataset   = "Switch"
 switch.sum.avg$targ_cont = NA
 
 plot_data<-bind_rows(switch.sum.avg, all.target.sum.avg)
 
 # Plot Figure 1 ---------------------------------------------------------------------
-# Plots data for each experiment, all condition
-plot_data$l1_measure <- paste(plot_data$L1, plot_data$measure, sep="_")
-plot_data$l1_measure <- factor(plot_data$l1_measure, levels=c("French_GD", "French_TRT", "English_GD",
+# Plots data for the two experiments, all conditions
+plot_data$l1_measure <- paste(plot_data$L1, plot_data$measure, sep = "_")
+plot_data$l1_measure <- factor(plot_data$l1_measure, levels = c("French_GD", "French_TRT", "English_GD",
                                                               "English_TRT"))
-plot_data$dataset    <- factor(plot_data$dataset, levels=c("Switch", "Homographs", "Cognates")) 
-plot_data$targ_cont  <- factor(plot_data$targ_cont, levels=c("Target", "Control"))
+plot_data$dataset    <- factor(plot_data$dataset, levels = c("Switch", "Homographs", "Cognates")) 
+plot_data$targ_cont  <- factor(plot_data$targ_cont, levels = c("Target", "Control"))
 
 dataset_names <- c(
-  Switch = "Switch region",
+  Switch     = "Switch region",
   Homographs = "Downstream target region:\nHomographs",
-  Cognates = "Downstream target region:\nCognates"
+  Cognates   = "Downstream target region:\nCognates"
 )
 
 l1_measure_names <- c(
@@ -167,19 +173,19 @@ l1_measure_names <- c(
 
 ggplot(plot_data,
        aes(x = switch_noswitch, y = meanRT, ymin = meanRT-serr, ymax = meanRT+serr, group = targ_cont)) +
-  geom_bar(stat = "identity", position = position_dodge(.9), aes(fill=targ_cont, colour = targ_cont)) +
-  geom_errorbar(position = position_dodge(.9), width=.2) +
+  geom_bar(stat = "identity", position = position_dodge(.9), aes(fill = targ_cont, colour = targ_cont)) +
+  geom_errorbar(position = position_dodge(.9), width = .2) +
   facet_grid(l1_measure ~ dataset, labeller = labeller(dataset = dataset_names, l1_measure = l1_measure_names)) +
   xlab("Switching")+
   theme_apa() +
-  guides(fill=guide_legend(title = "Word Type"))+
+  guides(fill = guide_legend(title = "Word Type"))+
   coord_cartesian(ylim = c(225, 575)) +
-  theme(plot.title = element_text(size = rel(1), lineheight = .8, face="bold")) +
+  theme(plot.title = element_text(size = rel(1), lineheight = .8, face = "bold")) +
   ylab("Mean reading time (in ms)") +
   scale_fill_manual(breaks = c("Target", "Control"),
-                    values = c("#808080", "#D3D3D3") , na.value="#202020") +
+                    values = c("#808080", "#D3D3D3") , na.value = "#202020") +
   scale_colour_manual(breaks = c("Target","Control"),
-                      values = c("#808080", "#D3D3D3"), na.value="#202020", guide=F)+
+                      values = c("#808080", "#D3D3D3"), na.value = "#202020", guide = F)+
   theme(legend.position = "bottom") +
   theme(strip.text.y = element_text(angle = 360))
 
@@ -190,15 +196,16 @@ ggsave("figures/figure 1.png", width = 12)
 # Switch region ----------------------
 # Core model, GD ----------------------
 switch.gd.base <- lmer(lFPGD_switch ~ cswitch_word_len + ctrial * switch_noswitch +
-                         (1 + cswitch_word_len + ctrial + switch_noswitch | subject) + (1 + ctrial | switch_word), 
-                       data=alldata.f)
+                         (1 + cswitch_word_len + ctrial + switch_noswitch | subject) + 
+                         (1 + ctrial | switch_word), 
+                       data = alldata.f)
 summary(switch.gd.base)
 
 # Core model, TRT ----------------------
 switch.trt.base <- lmer(lTRT_switch ~ cswitch_word_len  + ctrial * switch_noswitch +
                           (1 + cswitch_word_len + ctrial * switch_noswitch | subject) + 
                           (1 + ctrial | switch_word), 
-                        data=alldata.f)
+                        data = alldata.f)
 summary(switch.trt.base)
 
 # Interactions with L2 exposure, GD ----------------------
@@ -264,14 +271,14 @@ measure_names <- c(
 
 ggplot(ef, aes(x = ccurrent_exposure_L2, y = fit, ymin = lower, ymax = upper, group = WordType)) + 
   geom_line(aes(colour = WordType)) + geom_ribbon(alpha = .7, aes(fill = WordType))+
-  facet_grid(measure ~ ctrial, labeller = labeller(measure = measure_names,ctrial = trial_names)) +
+  facet_grid(measure ~ ctrial, labeller = labeller(measure = measure_names, ctrial = trial_names)) +
   theme_apa() +
   scale_colour_grey() + scale_fill_grey() +
   coord_cartesian(ylim = c(5.0,6.5)) +
   ylab("Estimated reading time (in log-ms)")+
   xlab("Z-score current L2 exposure")+
-  labs(fill='Word type', colour='Word type') +
-  theme(plot.title = element_text(size = rel(1), lineheight=.8, face="bold"))+
+  labs(fill = "Word type", colour = "Word type") +
+  theme(plot.title = element_text(size = rel(1), lineheight = .8, face = "bold"))+
   theme(legend.position = "top")
 ggsave("figures/figure 2.png", width = 6.5)
 
@@ -331,7 +338,7 @@ ggplot(ef, aes(x = ccurrent_exposure_L2, y = fit, ymin = lower, ymax = upper, gr
   coord_cartesian(ylim = c(5.0,6.5)) +
   ylab("Estimated reading time (in log-ms)") +
   xlab("Z-score current L2 exposure") +
-  labs(fill='Word type', colour='Word type') +
+  labs(fill = "Word type", colour = "Word type") +
   theme(plot.title = element_text(size = rel(1), lineheight = .8, face = "bold")) +
   theme(legend.position = "top")
 ggsave("figures/figure 3.png", width = 4.2, height = 4.2)
@@ -413,7 +420,7 @@ summary(target.trt.homs.base)
 # Plot Figure 5 ----------------------
 ef.gd <- as.data.frame(Effect(c("WordType", "switch_noswitch", "ctrial"), target.gd.homs.base, 
                               xlevels = list(ctrial = c(-1.6,0.35,2.3)),
-                              confidence.level=.6827))
+                              confidence.level = .6827))
 ef.gd$measure <- "GD"
 ef.trt <- as.data.frame(Effect(c("WordType", "switch_noswitch", "ctrial"), target.trt.homs.base, 
                                xlevels = list(ctrial = c(-1.6, 0.35, 2.3)),
@@ -434,7 +441,7 @@ measure_names <- c(
 
 ggplot(ef, aes(x = switch_noswitch, y = fit, ymin = lower, ymax = upper, fill = WordType)) + 
   geom_bar(stat = "identity",position = position_dodge(.9)) +
-  geom_errorbar(position = position_dodge(.9),width=.2)+
+  geom_errorbar(position = position_dodge(.9), width = .2)+
   facet_grid(measure ~ ctrial, labeller = labeller(measure = measure_names,ctrial = trial_names)) +
   theme_apa() +
   scale_fill_manual(breaks = c("Homograph", "Nonhomograph"),
@@ -442,7 +449,7 @@ ggplot(ef, aes(x = switch_noswitch, y = fit, ymin = lower, ymax = upper, fill = 
   coord_cartesian(ylim = c(5.0,6.5)) +
   ylab("Estimated reading time (in log-ms)")+
   xlab("Switching")+
-  labs(fill='Word type', colour='Word type') +
+  labs(fill = "Word type", colour = "Word type") +
   theme(plot.title = element_text(size = rel(1), lineheight = .8, face = "bold")) +
   theme(legend.position = "top")
 ggsave("figures/figure 5.png", width = 6.5)
