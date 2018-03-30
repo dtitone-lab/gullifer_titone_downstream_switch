@@ -1,6 +1,6 @@
 # Script corresponding to 
 # Gullifer, J. W., & Titone, D. (submitted). The impact of a momentary language 
-# switch on bilingual reading. Journal of Experimental Psychology: Learning, Memory, and Cognition
+# switch on bilingual reading. Journal of Experimental Psychology: Learning, Memory, and Cognition.
 
 library(checkpoint)
 checkpoint("2017-04-16")
