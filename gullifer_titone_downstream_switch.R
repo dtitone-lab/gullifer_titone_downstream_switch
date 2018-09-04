@@ -17,15 +17,15 @@ library(papaja)
 
 # Load data ----------------------
 # alldata used for analyses at switch region
-alldata       <- read.csv("data/alldata.csv", encoding = "UTF-8")
+alldata       <- read.csv("raw_data/alldata.csv", encoding = "UTF-8")
 
 # cognatedata used for analyses at the target region corresponding to the
 # cognate effect
-cognatedata   <- read.csv("data/cognatedata.csv", encoding = "UTF-8")
+cognatedata   <- read.csv("raw_data/cognatedata.csv", encoding = "UTF-8")
 
 # homographdata for analyses at the target region corresponding to the
 # homograph effect
-homographdata <- read.csv("data/homographdata.csv", encoding = "UTF-8")
+homographdata <- read.csv("raw_data/homographdata.csv", encoding = "UTF-8")
 
 # contrast coding for the switching effects
 contrasts(alldata$switch_noswitch)        <- -1 * contr.sum(2) / 2
@@ -190,6 +190,38 @@ ggplot(plot_data,
   theme(strip.text.y = element_text(angle = 360))
 
 ggsave("figures/figure 1.png", width = 12)
+
+
+# Tables of means ------
+switch_data <- plot_data[plot_data$switch_target=="switch",]
+switch_data <- switch_data %>% select(Group=L1, switch_noswitch, Measure=measure, meanRT, sd )
+
+swd1 <- switch_data  %>% select(-sd) %>% spread(switch_noswitch, meanRT)
+swd2 <- switch_data  %>% select(-meanRT) %>% spread(switch_noswitch, sd)
+switch_data <- left_join(swd1, swd2, by=c("Group", "Measure"), suffix=c(".mean",".sd"))
+
+switch_data$Nonswitch <- paste0(round(switch_data$Nonswitch.mean), " (", round(switch_data$Nonswitch.sd), ")")
+switch_data$Switch <- paste0(round(switch_data$Switch.mean), " (", round(switch_data$Switch.sd), ")")
+switch_data <- switch_data %>% select(-contains("."))
+
+write.csv(switch_data, "tables/table 3.csv", row.names = F)
+
+
+downstream_data <- plot_data[plot_data$switch_target=="target",]
+downstream_data <- downstream_data %>% select(Group=L1, switch_noswitch, Measure=measure, targ_cont, WordType=dataset, meanRT, sd )
+downstream_data <- downstream_data %>% unite(condition,switch_noswitch, WordType) 
+
+dd1 <- downstream_data %>% select(-sd) %>% spread(condition, meanRT)
+dd2 <- downstream_data %>% select(-meanRT) %>% spread(condition, sd)
+downstream_data <- left_join(dd1,dd2, by=c("Group","Measure","targ_cont"), suffix=c(".mean",".sd"))
+
+downstream_data$Nonswitch_Cognates <- paste0(round(downstream_data$Nonswitch_Cognates.mean), " (", round(downstream_data$Nonswitch_Cognates.sd), ")")
+downstream_data$Nonswitch_Homographs <- paste0(round(downstream_data$Nonswitch_Homographs.mean), " (", round(downstream_data$Nonswitch_Homographs.sd), ")")
+downstream_data$Switch_Cognates <- paste0(round(downstream_data$Switch_Cognates.mean), " (", round(downstream_data$Switch_Cognates.sd), ")")
+downstream_data$Switch_Homographs <- paste0(round(downstream_data$Switch_Homographs.mean), " (", round(downstream_data$Switch_Homographs.sd), ")")
+
+downstream_data <- downstream_data %>% select(-contains("."))
+write.csv(downstream_data,"tables/table 4.csv", row.names = F)
 
 
 # Experiment 1 analyses ----------------------

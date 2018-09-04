@@ -1,0 +1,9 @@
+Group,Measure,targ_cont,Nonswitch_Cognates,Nonswitch_Homographs,Switch_Cognates,Switch_Homographs
+French,GD,Target,299 (56),314 (76),302 (62),316 (67)
+French,GD,Control,318 (63),316 (69),322 (86),312 (76)
+French,TRT,Target,353 (91),488 (241),350 (111),450 (168)
+French,TRT,Control,383 (110),409 (155),399 (160),398 (129)
+English,GD,Target,266 (45),267 (40),271 (50),266 (50)
+English,GD,Control,268 (59),269 (48),263 (48),255 (48)
+English,TRT,Target,306 (75),331 (92),312 (83),345 (105)
+English,TRT,Control,306 (76),324 (85),303 (90),292 (58)
