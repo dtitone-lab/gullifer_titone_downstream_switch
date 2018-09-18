@@ -250,6 +250,17 @@ switch.trt.exposure <- lmer(lTRT_switch ~ cswitch_word_len  + ctrial * switch_no
                               (1 |subject) + (1 |switch_word), data = alldata.f)
 summary(switch.trt.exposure)
 
+# Add interactions with AoA, GD ----------------------
+switch.gd.aoa <- lmer(lFPGD_switch ~ cswitch_word_len + ctrial * switch_noswitch*caoa + ctrial * switch_noswitch * ccurrent_exposure_L2 +
+                             (1 | subject) + (1 | switch_word), data = alldata.f)
+summary(switch.gd.aoa)
+
+# Add interactions with AoA, TRT ----------------------
+switch.trt.aoa <- lmer(lTRT_switch ~ cswitch_word_len  + ctrial * switch_noswitch*caoa + ctrial * switch_noswitch * ccurrent_exposure_L2 +
+                              (1 |subject) + (1 |switch_word), data = alldata.f)
+summary(switch.trt.aoa)
+
+
 # Target region, homographs ----------------------
 # Core model, GD ----------------------
 target.gd.homs.base <- lmer(lFPGD_target ~ cswitch_word_len + ctrial * switch_noswitch * WordType +
@@ -274,6 +285,18 @@ target.trt.homs.exposure <- lmer(lTRT_target ~ cswitch_word_len +
                                    ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
                                    (1 |subject) + (1 | target_word), data = homographdata.f)
 summary(target.trt.homs.exposure)
+
+# Add interactions with AoA, GD ----------------------
+target.gd.homs.aoa <- lmer(lFPGD_target ~ cswitch_word_len + 
+                                  ctrial * switch_noswitch * WordType * caoa +  ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
+                                  (1 |subject) + (1 | target_word), data = homographdata.f)
+summary(target.gd.homs.aoa)
+
+# Add interactions with AoA, TRT ----------------------
+target.trt.homs.aoa <- lmer(lTRT_target ~ cswitch_word_len + 
+                                   ctrial * switch_noswitch * WordType * caoa + ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
+                                   (1 |subject) + (1 | target_word), data = homographdata.f)
+summary(target.trt.homs.aoa)
 
 # Plot Figure 2 ----------------------
 ef.gd<-as.data.frame(Effect(c("ccurrent_exposure_L2","WordType", "ctrial"), target.gd.homs.exposure, 
@@ -338,6 +361,23 @@ target.trt.cogs.exposure <- lmer(lTRT_target ~  cswitch_word_len +
                                    ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
                                    (1 |subject) + (1 | target_word), data = cognatedata.f)
 summary(target.trt.cogs.exposure)
+
+# Add interactions with AoA, GD ----------------------
+target.gd.cogs.aoa <- lmer(lFPGD_target ~ cswitch_word_len + 
+                             ctrial * switch_noswitch * WordType * caoa + ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
+                             (1 |subject) + (1 | target_word), data = cognatedata.f)
+summary(target.gd.cogs.aoa)
+
+ef <- data.frame(Effect(c("caoa","ctrial","WordType","switch_noswitch"), target.gd.cogs.aoa))
+ggplot(ef, aes(x=ctrial, y=fit, colour=WordType)) + facet_wrap(caoa~switch_noswitch) + geom_line()
+
+# Add interactions with AoA, TRT ----------------------
+target.trt.cogs.aoa <- lmer(lTRT_target ~  cswitch_word_len + 
+                                   ctrial * switch_noswitch * WordType * caoa +  ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
+                                   (1 |subject) + (1 | target_word), data = cognatedata.f)
+summary(target.trt.cogs.aoa)
+ef <- data.frame(Effect(c("caoa","ctrial","WordType","switch_noswitch"), target.trt.cogs.aoa))
+ggplot(ef, aes(x=ctrial, y=fit, colour=WordType)) + facet_wrap(caoa~switch_noswitch) + geom_line()
 
 # Plot Figure 3 ----------------------
 ef.gd <- as.data.frame(Effect(c("ccurrent_exposure_L2", "WordType"), target.gd.cogs.exp, 
@@ -436,6 +476,16 @@ switch.trt.exposure <- lmer(lTRT_switch ~ cswitch_word_len + ctrial * switch_nos
                               (1|subject) + (1|switch_word), data = alldata.e)
 summary(switch.trt.exposure)
 
+# Add interactions with AoA, GD ----------------------
+switch.gd.aoa <- lmer(lFPGD_switch ~ cswitch_word_len + ctrial * switch_noswitch * caoa + ctrial * switch_noswitch * ccurrent_exposure_L2 +
+                             (1|subject) + (1|switch_word), data = alldata.e)
+summary(switch.gd.aoa)
+
+# Add interactions with AoA, TRT ----------------------
+switch.trt.aoa <- lmer(lTRT_switch ~ cswitch_word_len + ctrial * switch_noswitch * caoa  + ctrial * switch_noswitch * ccurrent_exposure_L2 +
+                              (1|subject) + (1|switch_word), data = alldata.e)
+summary(switch.trt.aoa)
+
 # Target region, homographs ----------------------
 # Core model, GD ----------------------
 target.gd.homs.base <- lmer(lFPGD_target ~ cswitch_word_len + ctrial * switch_noswitch * WordType + 
@@ -448,6 +498,7 @@ target.trt.homs.base <- lmer(lTRT_target ~ cswitch_word_len + ctrial * switch_no
                                (1 + cswitch_word_len + ctrial + switch_noswitch * WordType |subject) + 
                                (1  + ctrial + switch_noswitch | target_word), data = homographdata.e)
 summary(target.trt.homs.base)
+
 
 # Plot Figure 5 ----------------------
 ef.gd <- as.data.frame(Effect(c("WordType", "switch_noswitch", "ctrial"), target.gd.homs.base, 
@@ -498,6 +549,18 @@ target.trt.homs.exposure <- lmer(lTRT_target ~ cswitch_word_len +
                                    (1 |subject) + (1 | target_word), data = homographdata.e)
 summary(target.trt.homs.exposure)
 
+# Add interactions with AoA, GD ----------------------
+target.gd.homs.aoa <- lmer(lFPGD_target ~ cswitch_word_len + 
+                                  ctrial * switch_noswitch * WordType * caoa +  ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
+                             (1 |subject) +  (1 | target_word), data = homographdata.e)
+summary(target.gd.homs.aoa)
+
+# Add interactions with AoA, TRT ----------------------
+target.trt.homs.aoa <- lmer(lTRT_target ~ cswitch_word_len + 
+                                   ctrial * switch_noswitch * WordType * caoa + ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
+                                   (1 |subject) + (1 | target_word), data = homographdata.e)
+summary(target.trt.homs.aoa)
+
 # Target region, cognates ----------------------
 # Core model, GD ----------------------
 target.gd.cogs.base <- lmer(lFPGD_target ~ cswitch_word_len + ctrial * switch_noswitch * WordType +
@@ -522,3 +585,16 @@ target.trt.cogs.exposure <- lmer(lTRT_target ~  cswitch_word_len +
                                    ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
                                    (1 |subject) + (1 | target_word), data = cognatedata.e)
 summary(target.trt.cogs.exposure)
+
+# Add interactions with AoA, GD ----------------------
+target.gd.cogs.aoa <- lmer(lFPGD_target ~ cswitch_word_len + 
+                             ctrial * switch_noswitch * WordType * caoa +  ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
+                             (1 |subject) + (1 | target_word), data = cognatedata.e)
+summary(target.gd.cogs.aoa)
+
+# Add interactions with AoA, TRT ----------------------
+target.trt.cogs.aoa <- lmer(lTRT_target ~  cswitch_word_len + 
+                                   ctrial * switch_noswitch * WordType * caoa +  ctrial * switch_noswitch * WordType * ccurrent_exposure_L2 +
+                                   (1 |subject) + (1 | target_word), data = cognatedata.e)
+summary(target.trt.cogs.aoa)
+

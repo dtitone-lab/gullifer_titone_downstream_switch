@@ -1,5 +1,5 @@
-Group,Measure,Nonswitch,Switch,Switch-Noswitch
-French,GD,303 (50),395 (91),92
-French,TRT,411 (132),545 (149),134
-English,GD,239 (36),337 (78),98
-English,TRT,298 (77),485 (173),187
+"Group","Measure","Nonswitch","Switch"
+"English","GD","239 (36)","337 (78)"
+"English","TRT","298 (77)","485 (173)"
+"French","GD","303 (50)","395 (91)"
+"French","TRT","411 (132)","545 (149)"
