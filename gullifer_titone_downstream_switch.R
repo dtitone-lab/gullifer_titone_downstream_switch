@@ -240,6 +240,20 @@ switch.trt.base <- lmer(lTRT_switch ~ cswitch_word_len  + ctrial * switch_noswit
                         data = alldata.f)
 summary(switch.trt.base)
 
+# Core model, adding interactions with norm LD, GD ----------------------
+switch.gd.base <- lmer(lFPGD_switch ~ cswitch_word_len + ctrial * switch_noswitch * cnormLD +
+                         (1 + cswitch_word_len + ctrial + switch_noswitch | subject) + 
+                         (1 + ctrial | switch_word), 
+                       data = alldata.f)
+summary(switch.gd.base)
+
+# Core model, adding interactions with norm LD,  TRT ----------------------
+switch.trt.base <- lmer(lTRT_switch ~ cswitch_word_len  + ctrial * switch_noswitch * cnormLD +
+                          (1 + cswitch_word_len + ctrial * switch_noswitch | subject) + 
+                          (1 + ctrial | switch_word), 
+                        data = alldata.f)
+summary(switch.trt.base)
+
 # Interactions with L2 exposure, GD ----------------------
 switch.gd.exposure <- lmer(lFPGD_switch ~ cswitch_word_len + ctrial * switch_noswitch * ccurrent_exposure_L2 +
                              (1 | subject) + (1 | switch_word), data = alldata.f)
@@ -273,6 +287,19 @@ target.trt.homs.base <- lmer(lTRT_target ~ cswitch_word_len + ctrial * switch_no
                                (1 + ctrial + switch_noswitch * WordType |subject) + 
                                (1 + ctrial + switch_noswitch | target_word), data = homographdata.f)
 summary(target.trt.homs.base)
+
+# Core model, adding interactions with normLD, GD ----------------------
+target.gd.homs.base <- lmer(lFPGD_target ~ cswitch_word_len + ctrial * switch_noswitch * WordType * normLD +
+                              (1 + ctrial + switch_noswitch + WordType |subject) +
+                              (1 + ctrial + switch_noswitch | target_word), data = homographdata.f)
+summary(target.gd.homs.base)
+
+# Core model, adding interactions with normLD, TRT ----------------------
+target.trt.homs.base <- lmer(lTRT_target ~ cswitch_word_len + ctrial * switch_noswitch * WordType * normLD +
+                               (1 + ctrial + switch_noswitch * WordType |subject) + 
+                               (1 + switch_noswitch | target_word), data = homographdata.f)
+summary(target.trt.homs.base)
+
 
 # Interactions with L2 exposure, GD ----------------------
 target.gd.homs.exposure <- lmer(lFPGD_target ~ cswitch_word_len + 
@@ -346,6 +373,18 @@ summary(target.gd.cogs.base)
 
 # Core model, TRT ----------------------
 target.trt.cogs.base <- lmer(lTRT_target ~  cswitch_word_len + ctrial * switch_noswitch * WordType +
+                               (1  + ctrial + switch_noswitch + WordType |subject) + 
+                               (1  + ctrial + switch_noswitch | target_word), data = cognatedata.f)
+summary(target.trt.cogs.base)
+
+# Core model, adding interactions with norm LD, GD ----------------------
+target.gd.cogs.base <- lmer(lFPGD_target ~ cswitch_word_len + ctrial * switch_noswitch * WordType * cnormLD +
+                              (1 + cswitch_word_len + ctrial + switch_noswitch * WordType |subject) + 
+                              (1  + ctrial + switch_noswitch | target_word), data = cognatedata.f)
+summary(target.gd.cogs.base)
+
+# Core model, adding interactions with norm LD, TRT ----------------------
+target.trt.cogs.base <- lmer(lTRT_target ~  cswitch_word_len + ctrial * switch_noswitch * WordType * cnormLD +
                                (1  + ctrial + switch_noswitch + WordType |subject) + 
                                (1  + ctrial + switch_noswitch | target_word), data = cognatedata.f)
 summary(target.trt.cogs.base)
@@ -429,6 +468,18 @@ switch.trt.base <- lmer(lTRT_switch ~ cswitch_word_len + ctrial * switch_noswitc
                           (1 | switch_word), data = alldata.e)
 summary(switch.trt.base)
 
+# Core model, adding interactions with norm LD, GD ----------------------
+switch.gd.base <- lmer(lFPGD_switch ~ cswitch_word_len + ctrial * switch_noswitch * cnormLD +
+                         (1 + cswitch_word_len + ctrial * switch_noswitch | subject) + 
+                         (1 + ctrial | switch_word), data = alldata.e)
+summary(switch.gd.base)
+
+# Core model, adding interactions with norm LD, TRT ----------------------
+switch.trt.base <- lmer(lTRT_switch ~ cswitch_word_len + ctrial * switch_noswitch * cnormLD +
+                          (1 + cswitch_word_len + ctrial + switch_noswitch | subject) + 
+                          (1 | switch_word), data = alldata.e)
+summary(switch.trt.base)
+
 # Plot Figure 4 ----------------------
 ef.gd<-as.data.frame(Effect(c("ctrial","switch_noswitch"), switch.gd.base, 
                             xlevels = list(ctrial = c(-1.6,0.35,2.3)),
@@ -499,6 +550,17 @@ target.trt.homs.base <- lmer(lTRT_target ~ cswitch_word_len + ctrial * switch_no
                                (1  + ctrial + switch_noswitch | target_word), data = homographdata.e)
 summary(target.trt.homs.base)
 
+# Core model, adding interactions with norm LD, GD ----------------------
+target.gd.homs.base <- lmer(lFPGD_target ~ cswitch_word_len + ctrial * switch_noswitch * WordType * cnormLD + 
+                              (1 + switch_noswitch + WordType |subject) + (1  + switch_noswitch | target_word), 
+                            data = homographdata.e)
+summary(target.gd.homs.base)
+
+# Core model, adding interactions with norm LD, TRT ----------------------
+target.trt.homs.base <- lmer(lTRT_target ~ cswitch_word_len + ctrial * switch_noswitch * WordType * cnormLD +
+                               (1 + cswitch_word_len + ctrial + switch_noswitch * WordType |subject) + 
+                               (1 + switch_noswitch | target_word), data = homographdata.e)
+summary(target.trt.homs.base)
 
 # Plot Figure 5 ----------------------
 ef.gd <- as.data.frame(Effect(c("WordType", "switch_noswitch", "ctrial"), target.gd.homs.base, 
@@ -570,6 +632,18 @@ summary(target.gd.cogs.base)
 
 # Core model, TRT ----------------------
 target.trt.cogs.base <- lmer(lTRT_target ~  cswitch_word_len + ctrial * switch_noswitch * WordType +
+                               (1 + ctrial + switch_noswitch * WordType | subject) + 
+                               (1 + switch_noswitch | target_word), data = cognatedata.e)
+summary(target.trt.cogs.base)
+
+# Core model, adding interactions with norm LD, GD ----------------------
+target.gd.cogs.base <- lmer(lFPGD_target ~ cswitch_word_len + ctrial * switch_noswitch * WordType * cnormLD +
+                              (1 + switch_noswitch + WordType | subject) + (1 + switch_noswitch | target_word),
+                            data = cognatedata.e)
+summary(target.gd.cogs.base)
+
+# Core model, adding interactions with norm LD, TRT ----------------------
+target.trt.cogs.base <- lmer(lTRT_target ~  cswitch_word_len + ctrial * switch_noswitch * WordType * cnormLD +
                                (1 + ctrial + switch_noswitch * WordType | subject) + 
                                (1 + switch_noswitch | target_word), data = cognatedata.e)
 summary(target.trt.cogs.base)
